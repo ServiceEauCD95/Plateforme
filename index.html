@@ -427,7 +427,7 @@
             };
             // Charger le fichier shapefile des masses d'eau souterraines
             const featureMasseEau = new FeatureLayer({
-                url: "https://services8.arcgis.com/WtV4vxF1c49173Ve/arcgis/rest/services/masses_eau/FeatureServer/0",
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/masses_eau/FeatureServer/0",
                 renderer: masseEauRenderer,
                 title: "Masses d'eau souterraines",
                 visible: false
@@ -488,7 +488,7 @@
             };
             // Charger le fichier shapefile des départements
             const featureDepartements = new FeatureLayer({
-                url: "https://services8.arcgis.com/WtV4vxF1c49173Ve/arcgis/rest/services/departements/FeatureServer/0",
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/departements/FeatureServer/0",
                 renderer: departementsRenderer,
                 title: "Limites des départements"
             });
@@ -602,7 +602,7 @@
             nitratesRenderer.visualVariables = [sizeVisualVariable];
             //  Charger le fichier shapefile des points de mesure de nitrates
             const featureLayerNitrates = new FeatureLayer({
-                url: "https://services8.arcgis.com/WtV4vxF1c49173Ve/arcgis/rest/services/nitrates_time_slider/FeatureServer/0",
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/nitrates_time_slider/FeatureServer/0",
                 renderer: nitratesRenderer,
                 popupTemplate: template,
                 title: "Concentration de nitrates",
@@ -697,7 +697,7 @@
             };
             // Charger le fichier shapefile des piézomètres
             const featureLayer = new FeatureLayer({
-                url: "https://services8.arcgis.com/WtV4vxF1c49173Ve/arcgis/rest/services/piezometres/FeatureServer/0",
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/piezometres/FeatureServer/0",
                 popupTemplate: template,
                 renderer: piezoRenderer,
                 title: "Piézomètres (ADES)"
@@ -791,7 +791,7 @@
             };
             // Charger le fichier shapefile des qualitomètres
             const featureLayerQualito = new FeatureLayer({
-                url: "https://services8.arcgis.com/WtV4vxF1c49173Ve/arcgis/rest/services/qualitometres/FeatureServer/0",
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/qualitometres/FeatureServer/0",
                 popupTemplate: template,
                 renderer: qualitoRenderer,
                 title: "Qualitomètres (ADES)"
@@ -949,7 +949,7 @@
                 view: view,
                 mode: "time-window",
                 // Spécifier le champ qui contient les informations temporelles.
-                timeField: "Data",
+                timeField: "Date1",
                 // Définir l'étendue temporelle complète en fonction des données.
                 fullTimeExtent: {
                     start: new Date(2000, 0, 1),
