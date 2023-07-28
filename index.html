@@ -319,6 +319,78 @@
 
             //===============================================================================================
 
+            const templateBNPE = {
+                "title": "Données sur les prélèvements en eau",
+                "content": [{
+                    "type": "fields",
+                    "fieldInfos": [
+                        {
+                            "fieldName": "Code SANDRE",
+                            "label": "Code_SANDRE",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": null,
+                            "stringFieldOption": "text-box"
+                        },
+                        {
+                            "fieldName": "FIRST_Nom_de_l_ouvrage",
+                            "label": "Nom de l'ouvrage",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": null,
+                            "stringFieldOption": "text-box"
+                        },
+                        {
+                            "fieldName": "FIRST_Libellé_usage_BNPE",
+                            "label": "Usage BNPE",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": null,
+                            "stringFieldOption": "text-box"
+                        },
+                        {
+                            "fieldName": "FIRST_type_d_eau",
+                            "label": "Type de captage",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": null,
+                            "stringFieldOption": "text-box"
+                        },
+                        {
+                            "fieldName": "Année",
+                            "label": "Année",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": {
+                                "places": 0,
+                                "digitSeparator": true
+                            },
+                            "stringFieldOption": "text-box"
+                        },
+                        {
+                            "fieldName": "SUM_Volume__m3_",
+                            "label": "Volume d'eau (m³)",
+                            "isEditable": true,
+                            "tooltip": "",
+                            "visible": true,
+                            "format": {
+                                "places": 2,
+                                "digitSeparator": true
+                            },
+                            "stringFieldOption": "text-box"
+                        }
+                    ]
+                }],
+                actions: [noAction] // Actions disponibles sur les boutons 
+            };
+
+            //===============================================================================================
+
             // Réglér l'action du bouton d'ouverture du siteweb du département du Val d'Oise
             view.popup.on("trigger-action", (event) => {
                 if (event.action.id === "action-val-oise") {
@@ -608,7 +680,69 @@
                 title: "Concentration de nitrates",
                 visible: false
             });
-            map.add(featureLayerNitrates, 3);
+            map.add(featureLayerNitrates, 4);
+
+            //===============================================================================================
+            const commonPropertiesBNPE = {
+                type: "simple-marker",
+                style: "circle",
+                size: "10px"
+            };
+            // Symbologie pour la Craie
+            const symbolSOUT = {
+                ...commonPropertiesBNPE,
+                color: "#73DFFF"
+            };
+            // Symbologie pour les Calcaires du Lutétien
+            const symbolCONT = {
+                ...commonPropertiesBNPE,
+                color: "#E8BEFF"
+            };
+
+            const BNPErenderer = {
+                type: "unique-value",
+                field: "FIRST_Type_d_eau",
+                legendOptions: {
+                    title: "Type d'eau"
+                },
+                uniqueValueInfos: [
+                    {
+                        value: "SOUT",
+                        symbol: symbolSOUT,
+                        label: "Souterraine"
+                    },
+                    {
+                        value: "CONT",
+                        symbol: symbolCONT,
+                        label: "Continentale"
+                    }
+                ],
+                visualVariables: [
+                    {
+                        type: "size",
+                        field: "SUM_Volume__m3",
+                        legendOptions: {
+                            title: "Volume d'eau (millions m³)"
+                        },
+                        stops: [
+                            { value: 250000, size: "10px", label: "0 à 0,25" },
+                            { value: 500000, size: "14px", label: "0,2 à 0,5" },
+                            { value: 1000000, size: "20px", label: "0,5 à 1,0" },
+                            { value: 25000000, size: "30px", label: "1,0 à 2,5" },
+                            { value: 100000000, size: "42px", label: "> 2,5" }
+                        ]
+                    }
+                ]
+            };
+            //  Charger le fichier shapefile des points des prélévements BNPE
+            const featureLayerBNPE = new FeatureLayer({
+                url: "https://services9.arcgis.com/7zbDKfMocNiC8yPP/arcgis/rest/services/prelevements_bnpe/FeatureServer/0",
+                renderer: BNPErenderer,
+                popupTemplate: templateBNPE,
+                title: "Prélèvements en eau (BNPE)",
+                visible: false
+            });
+            map.add(featureLayerBNPE, 3);
 
             //===============================================================================================
 
@@ -702,7 +836,7 @@
                 renderer: piezoRenderer,
                 title: "Piézomètres (ADES)"
             });
-            map.add(featureLayer, 4);
+            map.add(featureLayer, 5);
 
             //===============================================================================================
 
@@ -796,7 +930,7 @@
                 renderer: qualitoRenderer,
                 title: "Qualitomètres (ADES)"
             });
-            map.add(featureLayerQualito, 5);
+            map.add(featureLayerQualito, 6);
 
             //===============================================================================================
 
@@ -878,6 +1012,8 @@
             var highlightFeatureLayer = null;
             var highlightFeatureLayerQualito = null;
             var highlightFeatureLayerNitrates = null;
+            var highlightFeatureLayerBNPE = null;
+
             // Évenement "pointer-move" pour tous les layers
             view.on("pointer-move", function (event) {
                 view.hitTest(event).then(function (response) {
@@ -893,9 +1029,15 @@
                         highlightFeatureLayerNitrates.remove();
                         highlightFeatureLayerNitrates = null;
                     }
+                    if (highlightFeatureLayerBNPE) {
+                        highlightFeatureLayerBNPE.remove();
+                        highlightFeatureLayerBNPE = null;
+                    }
+
                     var featureLayerResults = response.results.filter(function (result) {
                         return result.graphic.layer === featureLayer;
                     });
+
                     if (featureLayerResults.length > 0) {
                         var feature = featureLayerResults[0].graphic;
                         view.whenLayerView(featureLayer).then(function (featureLayerView) {
@@ -905,6 +1047,7 @@
                         var featureLayerQualitoResults = response.results.filter(function (result) {
                             return result.graphic.layer === featureLayerQualito;
                         });
+
                         if (featureLayerQualitoResults.length > 0) {
                             var featureQualito = featureLayerQualitoResults[0].graphic;
                             view.whenLayerView(featureLayerQualito).then(function (featureLayerQualitoView) {
@@ -914,11 +1057,23 @@
                             var featureLayerNitratesResults = response.results.filter(function (result) {
                                 return result.graphic.layer === featureLayerNitrates;
                             });
+
                             if (featureLayerNitratesResults.length > 0) {
                                 var featureNitrates = featureLayerNitratesResults[0].graphic;
                                 view.whenLayerView(featureLayerNitrates).then(function (featureLayerNitratesView) {
                                     highlightFeatureLayerNitrates = featureLayerNitratesView.highlight(featureNitrates);
                                 });
+                            } else {
+                                var featureLayerBNPEResults = response.results.filter(function (result) {
+                                    return result.graphic.layer === featureLayerBNPE;
+                                });
+
+                                if (featureLayerBNPEResults.length > 0) {
+                                    var featureBNPE = featureLayerBNPEResults[0].graphic;
+                                    view.whenLayerView(featureLayerBNPE).then(function (featureLayerBNPEView) {
+                                        highlightFeatureLayerBNPE = featureLayerBNPEView.highlight(featureBNPE);
+                                    });
+                                }
                             }
                         }
                     }
@@ -948,8 +1103,6 @@
                 container: "timeSlider",
                 view: view,
                 mode: "time-window",
-                // Spécifier le champ qui contient les informations temporelles.
-                timeField: "Date1",
                 // Définir l'étendue temporelle complète en fonction des données.
                 fullTimeExtent: {
                     start: new Date(2000, 0, 1),
