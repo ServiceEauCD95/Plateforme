@@ -45,6 +45,32 @@
             padding: 10px 10px 0px 10px;
             font-size: 14pt;
         }
+
+        #buttonDiv {
+            background: #fff;
+            height: 32px;
+            width: 32px;
+            padding-top: 8px;
+            padding-left: 8px;
+        }
+
+        #buttonDiv a.esri-icon-description {
+            color: gray;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        /* Font style*/
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap');
+
+
+        .modal-content {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .modal-body {
+            text-align: justify;
+        }
     </style>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -122,6 +148,12 @@
                 center: [2.150, 49.075],  // Coordonnées lon/lat du point central de la carte 
                 zoom: 10    // Niveau de zoom initial
             });
+
+            //===============================================================================================
+
+            // Adicionar botão para visualizar gráficos
+            view.ui.add("buttonDiv", "top-left")
+
 
             //===============================================================================================
 
@@ -326,7 +358,7 @@
                     "fieldInfos": [
                         {
                             "fieldName": "Code SANDRE",
-                            "label": "Code_SANDRE",
+                            "label": "Code SANDRE",
                             "isEditable": true,
                             "tooltip": "",
                             "visible": true,
@@ -1225,6 +1257,61 @@
             <div id="slider-container"></div>
         </div>
     </div>
+
+    <!--Résumé documentation-->
+    <div id="buttonDiv">
+        <a class="esri-icon-description" href="#" data-toggle="modal" data-target="#descrip"></a>
+    </div>
+
+    <!-- Modal Documentation-->
+    <div class="modal" id="descrip" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="width: 700px; max-height: 400px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" style="font-size: 20px;"><b>Description des données</b></p>
+                    <div class="modal-body">
+                        <h4>Piézomètres :</h4>
+                        <p>- Données des niveaux d'eau issues du portail national ADES (Accès aux Données sur les Eaux
+                            Souterraines) ;<br>
+                            - Sélection uniquement des piézomètres avec des longueurs des chroniques de données
+                            supérieures à 10 ans et comportant au moins 100 mesures.</p>
+
+                        <h4>Qualitomètres :</h4>
+                        <p>- Données des qualité d'eau issues du portail national ADES (Accès aux Données sur les Eaux
+                            Souterraines)</p>
+
+                        <h4>Concentration de nitrates</h4>
+                        <p>- Calcul des moyennes annuelles des concentrations de nitrates dans les qualitomètres
+                            sélectionnés pour la période de 2000 à 2022.</p>
+
+                        <h4>Prélèvements en eau</h4>
+                        <p>- Données issues de la base BNPE (Banque Nationale des Prélèvements en Eau) ;<br>
+                            - Collecte des informations sur les volumes annuels prélevés selon les redevances perçues
+                            par l'Agence de l'Eau ;<br>
+                            - Données disponibles pour la période de 2012 à 2020.</p>
+
+                        <h4>Limite des départements</h4>
+                        <p>- Produit ADMIN EXPRESS élaboré par IGN (Institut National de l'Information Géographique et
+                            Forestière).</p>
+
+                        <h4>Usage du Sol</h4>
+                        <p>- Données issues de la base Corine Land Cover (2018) du programme européen de surveillance de
+                            la Terre Copernicus.</p>
+
+                        <h4>Masses d'eau souterraines</h4>
+                        <p>- Données issues du référentiel des masses d'eau issu de la base SANDRE (Service
+                            d'Administration Nationale des Données et Référentiels sur l'Eau).</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default close-button" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </body>
 
